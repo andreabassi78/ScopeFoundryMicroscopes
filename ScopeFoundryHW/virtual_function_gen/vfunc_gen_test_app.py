@@ -25,12 +25,12 @@ class VirtualFunctionGenTestApp(BaseMicroscopeApp):
         #self.settings.New('test1', dtype=int, initial=0)
         
         #Add Hardware components
-        from ScopeFoundryHW.virtual_function_gen.vfunc_gen_hw import VirtualFunctionGenHW
+        from vfunc_gen_hw import VirtualFunctionGenHW
         self.add_hardware(VirtualFunctionGenHW(self))
 
 
         #Add Measurement components
-        from ScopeFoundryHW.virtual_function_gen.sine_wave_measure import SineWavePlotMeasure
+        from sine_wave_measure import SineWavePlotMeasure
         self.add_measurement(SineWavePlotMeasure(self))
         
         

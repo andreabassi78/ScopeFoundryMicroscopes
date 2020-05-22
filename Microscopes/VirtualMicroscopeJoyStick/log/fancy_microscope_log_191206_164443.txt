@@ -1,0 +1,9 @@
+2019-12-06T16:44:47|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 215, in enable_connection
+    raise err
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 205, in enable_connection
+    self.connect()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundryHW\joystick_hardware\joystick_hd.py", line 28, in connect
+    self.settings.buttons.connect_to_hardware(
+AttributeError: 'LQCollection' object has no attribute 'buttons'
+

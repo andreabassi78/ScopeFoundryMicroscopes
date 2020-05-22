@@ -1,0 +1,8 @@
+2019-12-06T12:20:27|INFO|SineWavePlotMeasure|sine_wave_plot start_stop False
+2019-12-06T12:20:27|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2019-12-06T12:20:27|INFO|VirtualFunctionGenTestApp|setting up figures for sine_wave_plot measurement sine_wave_plot
+2019-12-06T12:20:35|INFO|SineWavePlotMeasure|sine_wave_plot start_stop True
+2019-12-06T12:20:35|INFO|SineWavePlotMeasure|measurement sine_wave_plot start
+2019-12-06T12:20:42|INFO|VirtualFunctionGenTestApp|on_close
+2019-12-06T12:20:42|INFO|VirtualFunctionGenTestApp|disconnecting virtual_function_gen
+2019-12-06T12:20:42|WARNING|LoggedQuantity|sine_data read_from_hardware called when not connected to hardware

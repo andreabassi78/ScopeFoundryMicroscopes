@@ -1,0 +1,9 @@
+2019-12-06T17:38:30|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 25, in run
+    self.measurement._thread_run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 183, in _thread_run
+    self.run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\Microscopes\VirtualMicroscopeJoyStick\SineGenJoyStick_measure.py", line 108, in run
+    self.func_gen.amplitude.val = self.joystick.joystick_dev.get_axis_values(5)
+AttributeError: 'VirtualFunctionGenHW' object has no attribute 'amplitude'
+

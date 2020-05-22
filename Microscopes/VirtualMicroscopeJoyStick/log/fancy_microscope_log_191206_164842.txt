@@ -1,0 +1,11 @@
+2019-12-06T16:48:46|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 215, in enable_connection
+    raise err
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 205, in enable_connection
+    self.connect()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundryHW\joystick_hardware\joystick_hd.py", line 25, in connect
+    read_func  = self.joystick_dev.get_axis_values()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 676, in connect_to_hardware
+    assert callable(read_func)
+AssertionError
+

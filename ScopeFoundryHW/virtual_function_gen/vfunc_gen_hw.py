@@ -1,5 +1,5 @@
 from ScopeFoundry import HardwareComponent
-from ScopeFoundryHW.virtual_function_gen.vfunc_gen_device import VirtualFunctionGenDevice
+from vfunc_gen_device import VirtualFunctionGenDevice
 
 
 class VirtualFunctionGenHW(HardwareComponent):

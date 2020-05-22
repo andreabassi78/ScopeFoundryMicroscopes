@@ -1,0 +1,34 @@
+2019-12-06T17:15:59|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 215, in enable_connection
+    raise err
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 205, in enable_connection
+    self.connect()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundryHW\joystick_hardware\joystick_hd.py", line 37, in connect
+    self.read_from_hardware()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 182, in read_from_hardware
+    lq.read_from_hardware()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 164, in read_from_hardware
+    self.update_value(new_val=val, update_hardware=False, send_signal=send_signal)
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 224, in update_value
+    new_val = self.coerce_to_type(new_val)
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 137, in coerce_to_type
+    return self.dtype(x)
+TypeError: float() argument must be a string or a number, not 'tuple'
+
+2019-12-06T17:16:05|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 215, in enable_connection
+    raise err
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 205, in enable_connection
+    self.connect()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundryHW\joystick_hardware\joystick_hd.py", line 37, in connect
+    self.read_from_hardware()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\hardware.py", line 182, in read_from_hardware
+    lq.read_from_hardware()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 164, in read_from_hardware
+    self.update_value(new_val=val, update_hardware=False, send_signal=send_signal)
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 224, in update_value
+    new_val = self.coerce_to_type(new_val)
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\logged_quantity.py", line 137, in coerce_to_type
+    return self.dtype(x)
+TypeError: float() argument must be a string or a number, not 'tuple'
+

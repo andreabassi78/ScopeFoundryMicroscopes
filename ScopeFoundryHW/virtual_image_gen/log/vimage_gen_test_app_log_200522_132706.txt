@@ -1,0 +1,10 @@
+2020-05-22T13:42:20|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2020-05-22T13:42:20|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2020-05-22T13:42:21|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2020-05-22T13:42:29|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop True
+2020-05-22T13:42:29|INFO|VirtualImageGenMeasure|measurement virtual_image_measure start
+2020-05-22T13:43:09|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2020-05-22T13:43:09|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2020-05-22T13:43:09|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2020-05-22T13:46:47|INFO|VirtualImageGenTestApp|on_close
+2020-05-22T13:46:47|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen

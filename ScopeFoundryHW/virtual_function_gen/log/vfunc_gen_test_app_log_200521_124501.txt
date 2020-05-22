@@ -1,0 +1,15 @@
+2020-05-21T12:46:21|INFO|SineWavePlotMeasure|sine_wave_plot start_stop False
+2020-05-21T12:46:21|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2020-05-21T12:46:21|INFO|VirtualFunctionGenTestApp|setting up figures for sine_wave_plot measurement sine_wave_plot
+2020-05-21T12:47:23|INFO|SineWavePlotMeasure|sine_wave_plot start_stop True
+2020-05-21T12:47:23|INFO|SineWavePlotMeasure|measurement sine_wave_plot start
+2020-05-21T12:47:55|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2020-05-21T12:47:55|INFO|SineWavePlotMeasure|sine_wave_plot start_stop False
+2020-05-21T12:47:55|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2020-05-21T12:47:56|INFO|SineWavePlotMeasure|sine_wave_plot start_stop True
+2020-05-21T12:47:56|INFO|SineWavePlotMeasure|measurement sine_wave_plot start
+2020-05-21T12:55:33|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2020-05-21T12:55:33|INFO|SineWavePlotMeasure|sine_wave_plot start_stop False
+2020-05-21T12:55:34|INFO|SineWavePlotMeasure|measurement sine_wave_plot interrupt
+2020-05-21T12:55:38|INFO|VirtualFunctionGenTestApp|on_close
+2020-05-21T12:55:38|INFO|VirtualFunctionGenTestApp|disconnecting virtual_function_gen
