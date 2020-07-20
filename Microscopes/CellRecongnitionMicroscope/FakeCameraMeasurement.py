@@ -209,7 +209,7 @@ class FakeCameraMeasurement(Measurement):
         
         for indx, val in enumerate(cx):
             
-        #x,y,w,h = cv2.boundingRect(cnt)
+            #x,y,w,h = cv2.boundingRect(cnt)
             # x = int(self.cx[indx] - self.camera.dim_roi.val/2) 
             # y = int(self.cy[indx] - self.camera.dim_roi.val/2)
             x = int(cx[indx] - self.dimRoi/2) 
