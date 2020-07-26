@@ -17,9 +17,9 @@ class FakeCameraMeasurement(Measurement):
         self.ui_filename = sibling_path(__file__, "form.ui")
     
         self.ui = load_qt_ui_file(self.ui_filename)
-        self.settings.New('save_h5', dtype=bool, initial=False)
+        #self.settings.New('save_h5', dtype=bool, initial=False)
         
-        self.settings.New('refresh_period', dtype = float, initial=0.08, vmin=0)
+        self.settings.New('refresh_period', dtype = float, initial=0.08, vmin=0, vmax=10)
         
         self.settings.New('auto_range', dtype=bool, initial=True)
         self.settings.New('auto_levels', dtype=bool, initial=True)
@@ -47,7 +47,7 @@ class FakeCameraMeasurement(Measurement):
         # connect ui widgets to measurement/hardware settings or functions
         self.ui.start_pushButton.clicked.connect(self.start)
         self.ui.interrupt_pushButton.clicked.connect(self.interrupt)
-        self.settings.save_h5.connect_to_widget(self.ui.save_h5_checkBox)
+        #self.settings.save_h5.connect_to_widget(self.ui.save_h5_checkBox)
         
         # connect ui widgets of live settings
         self.settings.auto_levels.connect_to_widget(self.ui.autoLevels_checkBox)
@@ -73,7 +73,7 @@ class FakeCameraMeasurement(Measurement):
         This function runs repeatedly and automatically during the measurement run,
         its update frequency is defined by self.display_update_period.
         """
-        
+        t0 = time.time()
         if self.settings.auto_levels.val:
             # if autolevel is on, normalize the image to its max and min     
             level_min = np.amin(self.image)
@@ -90,12 +90,15 @@ class FakeCameraMeasurement(Measurement):
         
         img_thres = np.clip(self.image, level_min, level_max) # thresolding is required if autolevel is off (could be avoided if autolevel is on)
         
-        image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
+        image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min+1)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
+        # addition +1 is made to avoid division with zeros
         
         self.displayed_image = self.draw_contours(image8bit_normalized,self.cnt,self.cx,self.cy)
         
+        self.displayed_image[0,0,:] = 1 # to avoid an error of pyqtgraph, which is unable to display black images
+         
         self.imv.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
-        
+        #print('Elapsed time for visualization:', time.time()-t0)
              
     def run(self):
         
@@ -108,7 +111,7 @@ class FakeCameraMeasurement(Measurement):
             while not self.interrupt_measurement_called:
                     
                 self.image = self.camera.fakecamera.get_image()
-                
+                t0 = time.time()
                 image8bit = (self.image/256).astype('uint8')
                 
                 self.cnt,self.cx,self.cy = self.find_cell(image8bit)
@@ -116,6 +119,8 @@ class FakeCameraMeasurement(Measurement):
                 if self.settings.extract_roi.val:                    
                     self.roi = self.roi_creation(self.image, self.cx, self.cy)
                            
+                #print('Elapsed time for cell recongnition:', time.time()-t0)
+                
                 time.sleep(0.05)
                 
         finally:

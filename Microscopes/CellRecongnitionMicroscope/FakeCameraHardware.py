@@ -18,15 +18,6 @@ class FakeCameraHardware(HardwareComponent):
         
         self.subarrayv = self.add_logged_quantity("subarray_vsize", dtype=float, si = False, ro= 0, 
                                                   spinbox_step = 4, spinbox_decimals = 0, initial = 447, vmin = 4, vmax = 447, reread_from_hardware_after_write = True)
-        
-        
-        self.subarrayh_pos = self.add_logged_quantity('subarrayh_pos', dtype = float, si = False, ro = 0,
-                                                      spinbox_step = 4, spinbox_decimals = 0, initial = 0, vmin = 0, vmax = 402, reread_from_hardware_after_write = True,
-                                                      description = "The default value 0 corresponds to the first pixel starting from the left")
-        
-        self.subarrayv_pos = self.add_logged_quantity('subarrayv_pos', dtype = float, si = False, ro = 0,
-                                                      spinbox_step = 4, spinbox_decimals = 0, initial = 0, vmin = 0, vmax = 443, reread_from_hardware_after_write = True,
-                                                      description = "The default value 0 corresponds to the first pixel starting from the top")
     
         self.path = self.add_logged_quantity('path', 
                                              dtype = str, si = False, ro = 0,
@@ -49,8 +40,6 @@ class FakeCameraHardware(HardwareComponent):
         """
         
         self.fakecamera = FakeCameraDevice(self.path.val+self.filename.val) #maybe with more cameras we have to change
-        
-        print(self.fakecamera.img.n_frames)
                 
         self.subarrayv.hardware_read_func = self.fakecamera.get_v_size
         self.subarrayh.hardware_read_func = self.fakecamera.get_h_size

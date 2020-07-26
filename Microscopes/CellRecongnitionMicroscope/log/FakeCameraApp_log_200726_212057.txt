@@ -1,0 +1,7 @@
+2020-07-26T21:21:22|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\anaconda3\envs\scopefoundry\lib\site-packages\pyqtgraph\graphicsItems\HistogramLUTItem.py", line 195, in imageChanged
+    h = self.imageItem().getHistogram()
+  File "C:\Users\Andrea Bassi\anaconda3\envs\scopefoundry\lib\site-packages\pyqtgraph\graphicsItems\ImageItem.py", line 464, in getHistogram
+    bins = np.arange(mn, mx+1.01*step, step, dtype=np.int)
+ValueError: arange: cannot compute length
+

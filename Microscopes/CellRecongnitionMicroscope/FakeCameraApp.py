@@ -1,15 +1,9 @@
 from ScopeFoundry import BaseMicroscopeApp
-from ScopeFoundry.logged_quantity import LoggedQuantity, FileLQ
-import os
-from qtpy import QtCore, QtGui, QtWidgets
-from ScopeFoundry.helper_funcs import confirm_on_close, ignore_on_close, load_qt_ui_file, \
-    OrderedAttrDict, sibling_path, get_logger_from_class, str2bool
-from PyQt5.Qt import QMessageBox
-    
+
+
 class FakeCameraApp(BaseMicroscopeApp):
     
     name = 'FakeCameraApp'
-    
     
     def setup(self):
         
@@ -28,4 +22,13 @@ if __name__ == '__main__':
             
     import sys
     app = FakeCameraApp(sys.argv)
+    
+    
+    ################### for debugging only ##############
+    app.settings_load_ini(".\\settings\\settings0.ini")
+    for hc_name, hc in app.hardware.items():
+        
+        hc.enable_connection()
+    #####################################################    
+        
     sys.exit(app.exec_())
