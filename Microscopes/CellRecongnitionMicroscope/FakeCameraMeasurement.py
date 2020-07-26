@@ -64,7 +64,7 @@ class FakeCameraMeasurement(Measurement):
         self.ui.plot_groupBox.layout().addWidget(self.imv)
         
         # Image initialization
-        self.image = np.zeros((int(self.camera.subarrayv.val),int(self.camera.subarrayh.val)),dtype=np.uint16)
+        # self.image = np.zeros((int(self.camera.subarrayv.val),int(self.camera.subarrayh.val)),dtype=np.uint16)
         
         
     def update_display(self):    # .T (transposed) delayed to allow the rgb visualization
@@ -73,33 +73,33 @@ class FakeCameraMeasurement(Measurement):
         This function runs repeatedly and automatically during the measurement run,
         its update frequency is defined by self.display_update_period.
         """
-        t0 = time.time()
-        if self.settings.auto_levels.val:
-            # if autolevel is on, normalize the image to its max and min     
-            level_min = np.amin(self.image)
-            level_max = np.amax(self.image)
-            self.settings['level_min'] = level_min    
-            self.settings['level_max'] = level_max
         
-        else:
-            # if autolevel is on, normalize the image to the choosen  values     
-            level_min = self.settings.level_min.val
-            level_max = self.settings.level_max.val
-        
-        # note that these levels are uiint16, but the visulaized image is uint8, for compatibility with opencv processing (contours and rectangles annotations) 
-        
-        img_thres = np.clip(self.image, level_min, level_max) # thresolding is required if autolevel is off (could be avoided if autolevel is on)
-        
-        image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min+1)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
-        # addition +1 is made to avoid division with zeros
-        
-        self.displayed_image = self.draw_contours(image8bit_normalized,self.cnt,self.cx,self.cy)
-        
-        self.displayed_image[0,0,:] = 1 # to avoid an error of pyqtgraph, which is unable to display black images
-         
-        self.imv.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
-        #print('Elapsed time for visualization:', time.time()-t0)
+        if hasattr(self, "image"):
+              
+            t0 = time.time()
+            if self.settings.auto_levels.val:
+                # if autolevel is on, normalize the image to its max and min     
+                level_min = np.amin(self.image)
+                level_max = np.amax(self.image)
+                self.settings['level_min'] = level_min    
+                self.settings['level_max'] = level_max
+            
+            else:
+                # if autolevel is on, normalize the image to the choosen  values     
+                level_min = self.settings.level_min.val
+                level_max = self.settings.level_max.val
+            
+            # note that these levels are uiint16, but the visulaized image is uint8, for compatibility with opencv processing (contours and rectangles annotations) 
+            
+            img_thres = np.clip(self.image, level_min, level_max) # thresolding is required if autolevel is off (could be avoided if autolevel is on)
+            
+            image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
+            
+            self.displayed_image = self.draw_contours(image8bit_normalized,self.cnt,self.cx,self.cy)
              
+            self.imv.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
+            #print('Elapsed time for visualization:', time.time()-t0)
+                 
     def run(self):
         
         self.display_update_period = self.settings.refresh_period.val
