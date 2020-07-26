@@ -35,7 +35,8 @@ class FakeCameraMeasurement(Measurement):
         
         self.cnt = []
         self.cx = []
-        self.cy = []        
+        self.cy = []
+        
         
     def setup_figure(self):
         """
@@ -60,7 +61,13 @@ class FakeCameraMeasurement(Measurement):
         self.settings.min_cell_size.connect_to_widget(self.ui.minCellSize_doubleSpinBox) #spinBox doesn't work nut it would be better
         
         # Set up pyqtgraph graph_layout in the UI
+         
         self.imv = pg.ImageView()
+        self.imv.ui.histogram.hide()
+        self.imv.ui.roiBtn.hide()
+        self.imv.ui.menuBtn.hide()
+        self.imv.setPredefinedGradient('thermal')
+        
         self.ui.plot_groupBox.layout().addWidget(self.imv)
         
         # Image initialization
@@ -90,19 +97,35 @@ class FakeCameraMeasurement(Measurement):
                 level_max = self.settings.level_max.val
             
             # note that these levels are uiint16, but the visulaized image is uint8, for compatibility with opencv processing (contours and rectangles annotations) 
-            
             img_thres = np.clip(self.image, level_min, level_max) # thresolding is required if autolevel is off (could be avoided if autolevel is on)
             
             image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
             
             self.displayed_image = self.draw_contours(image8bit_normalized,self.cnt,self.cx,self.cy)
-             
-            self.imv.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
+            
+            self.imv.setImage(self.image, autoLevels=True, autoRange=True)
+            
+            self.imv_external.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
             #print('Elapsed time for visualization:', time.time()-t0)
-                 
+            
+            
+    
+
+    def pre_run(self):
+        
+        if not hasattr(self, "imv_external"):
+            self.display_update_period = self.settings.refresh_period.val
+            plot = pg.PlotItem(title="channel")
+            #plot.setLabel(axis='left', text='y-axis')
+            #plot.setLabel(axis='bottom', text='x-axis')
+            self.imv_external = pg.ImageView(view = plot)
+            self.imv_external.show()
+
+             
     def run(self):
         
-        self.display_update_period = self.settings.refresh_period.val
+        
+        
 
         try:
             
