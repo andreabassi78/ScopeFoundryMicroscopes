@@ -2,6 +2,7 @@ from ScopeFoundry import Measurement
 from ScopeFoundry.helper_funcs import sibling_path, load_qt_ui_file
 from ScopeFoundry import h5_io
 import pyqtgraph as pg
+from functools import partial
 import numpy as np
 from datetime import datetime
 import os
@@ -13,33 +14,28 @@ class FakeCameraMeasurement(Measurement):
     name = "fake_camera_image"
         
     def setup(self):
-    
         self.ui_filename = sibling_path(__file__, "form.ui")
     
         self.ui = load_qt_ui_file(self.ui_filename)
         self.settings.New('save_h5', dtype=bool, initial=False)
-        self.settings.New('refresh_period', dtype=float, unit='s', spinbox_decimals = 4, initial=0.02 , hardware_set_func=self.setRefresh, vmin = 0)
-        self.settings.New('autoRange', dtype=bool, initial=True, hardware_set_func=self.setautoRange)
-        self.settings.New('autoLevels', dtype=bool, initial=True, hardware_set_func=self.setautoLevels)
-        self.settings.New('level_min', dtype=int, initial=60, hardware_set_func=self.setminLevel, hardware_read_func = self.getminLevel)
-        self.settings.New('level_max', dtype=int, initial=150, hardware_set_func=self.setmaxLevel, hardware_read_func = self.getmaxLevel)
         
-        self.settings.New('extractRoi', dtype=bool, initial=False, hardware_set_func=self.setExtractRoi, hardware_read_func=self.getExtractRoi)
-        self.settings.New('dimRoi', dtype=int, initial=150, hardware_set_func=self.setDimRoi, hardware_read_func = self.getDimRoi)
-        self.settings.New('minCellSize', dtype=int, initial=1600, hardware_set_func=self.setMinCellSize, hardware_read_func = self.getMinCellSize)
+        self.settings.New('refresh_period', dtype = float, initial=0.08, vmin=0)
+        
+        self.settings.New('auto_range', dtype=bool, initial=True)
+        self.settings.New('auto_levels', dtype=bool, initial=True)
+        self.settings.New('level_min', dtype=int, initial=60)
+        self.settings.New('level_max', dtype=int, initial=140)
+        
+        self.settings.New('extract_roi', dtype=bool, initial=False)
+        self.settings.New('roi_half_side', dtype=int, initial=75)
+        self.settings.New('min_cell_size', dtype=int, initial=1600)
         
         self.camera = self.app.hardware['FakeCameraHardware']
-        
-        self.autoRange = self.settings.autoRange.val
         self.display_update_period = self.settings.refresh_period.val
-        self.autoLevels = self.settings.autoLevels.val
-        self.level_min = self.settings.level_min.val
-        self.level_max = self.settings.level_max.val
         
-        self.dimRoi = self.settings.dimRoi.val
-        self.minCellSize = self.settings.minCellSize.val
-
-        
+        self.cnt = []
+        self.cx = []
+        self.cy = []        
         
     def setup_figure(self):
         """
@@ -54,14 +50,14 @@ class FakeCameraMeasurement(Measurement):
         self.settings.save_h5.connect_to_widget(self.ui.save_h5_checkBox)
         
         # connect ui widgets of live settings
-        self.settings.autoLevels.connect_to_widget(self.ui.autoLevels_checkBox)
-        self.settings.autoRange.connect_to_widget(self.ui.autoRange_checkBox)
+        self.settings.auto_levels.connect_to_widget(self.ui.autoLevels_checkBox)
+        self.settings.auto_range.connect_to_widget(self.ui.autoRange_checkBox)
         self.settings.level_min.connect_to_widget(self.ui.min_doubleSpinBox) #spinBox doesn't work nut it would be better
         self.settings.level_max.connect_to_widget(self.ui.max_doubleSpinBox) #spinBox doesn't work nut it would be better
-        
-        self.settings.extractRoi.connect_to_widget(self.ui.extractRoi_checkBox)
-        self.settings.dimRoi.connect_to_widget(self.ui.dimRoi_doubleSpinBox) #spinBox doesn't work nut it would be better
-        self.settings.minCellSize.connect_to_widget(self.ui.minCellSize_doubleSpinBox) #spinBox doesn't work nut it would be better
+
+        self.settings.extract_roi.connect_to_widget(self.ui.extractRoi_checkBox)
+        self.settings.roi_half_side.connect_to_widget(self.ui.dimRoi_doubleSpinBox) #spinBox doesn't work nut it would be better
+        self.settings.min_cell_size.connect_to_widget(self.ui.minCellSize_doubleSpinBox) #spinBox doesn't work nut it would be better
         
         # Set up pyqtgraph graph_layout in the UI
         self.imv = pg.ImageView()
@@ -69,102 +65,72 @@ class FakeCameraMeasurement(Measurement):
         
         # Image initialization
         self.image = np.zeros((int(self.camera.subarrayv.val),int(self.camera.subarrayh.val)),dtype=np.uint16)
-        # Create PlotItem object (a set of axes)  
         
-    def update_display(self):
+        
+    def update_display(self):    # .T (transposed) delayed to allow the rgb visualization
         """
         Displays the numpy array called self.image.  
         This function runs repeatedly and automatically during the measurement run,
         its update frequency is defined by self.display_update_period.
         """
-        #self.optimize_plot_line.setData(self.buffer) 
-
-        #self.imv.setImage(np.reshape(self.np_data,(self.camera.subarrayh.val, self.camera.subarrayv.val)).T)
-        #self.imv.setImage(self.image, autoLevels=False, levels=(100,340))
-        if self.autoLevels == False:  
-            self.imv.setImage((self.displayed_image), autoLevels=self.settings.autoLevels.val, autoRange=self.settings.autoRange.val, levels=(self.level_min, self.level_max))
-        else: #levels should not be sent when autoLevels is True, otherwise the image is displayed with them
-            self.imv.setImage((self.displayed_image), autoLevels=self.settings.autoLevels.val, autoRange=self.settings.autoRange.val)
-            self.settings.level_min.read_from_hardware()
-            self.settings.level_max.read_from_hardware()
+        
+        if self.settings.auto_levels.val:
+            # if autolevel is on, normalize the image to its max and min     
+            level_min = np.amin(self.image)
+            level_max = np.amax(self.image)
+            self.settings['level_min'] = level_min    
+            self.settings['level_max'] = level_max
+        
+        else:
+            # if autolevel is on, normalize the image to the choosen  values     
+            level_min = self.settings.level_min.val
+            level_max = self.settings.level_max.val
+        
+        # note that these levels are uiint16, but the visulaized image is uint8, for compatibility with opencv processing (contours and rectangles annotations) 
+        
+        img_thres = np.clip(self.image, level_min, level_max) # thresolding is required if autolevel is off (could be avoided if autolevel is on)
+        
+        image8bit_normalized = ( (img_thres-level_min)/(level_max-level_min)*255).astype('uint8') # convert to 8bit is done here for compatibility with opencv    
+        
+        self.displayed_image = self.draw_contours(image8bit_normalized,self.cnt,self.cx,self.cy)
+        
+        self.imv.setImage(self.displayed_image, autoLevels=False, autoRange=self.settings.auto_range.val, levels=(0,255))
+        
              
     def run(self):
         
-        self.image = np.zeros((int(self.camera.subarrayv.val),int(self.camera.subarrayh.val)),dtype=np.uint16)
-        self.image[0,0] = 1 #Otherwise we get the "all zero pixels" error (we should modify pyqtgraph...)
-        
-        self.displayed_image=self.image
+        self.display_update_period = self.settings.refresh_period.val
 
         try:
             
             self.camera.read_from_hardware()
-                        
                
             while not self.interrupt_measurement_called:
                     
-                im = self.camera.fakecamera.get_image()
-                self.image = im
-                #self.image = np.reshape(im,(self.eff_subarrayh, self.eff_subarrayv))
+                self.image = self.camera.fakecamera.get_image()
                 
-                image8bit, cnt,cx,cy = self.find_cell(self.image)
-                self.displayed_image = self.draw_contours(image8bit,cnt,cx,cy)
-                self.roi = self.roi_creation(self.image, cx, cy)
+                image8bit = (self.image/256).astype('uint8')
+                
+                self.cnt,self.cx,self.cy = self.find_cell(image8bit)
+                
+                if self.settings.extract_roi.val:                    
+                    self.roi = self.roi_creation(self.image, self.cx, self.cy)
                            
-                time.sleep(0.1)
-        
+                time.sleep(0.05)
+                
         finally:
             pass            
-                                
-            
-    def setRefresh(self, refresh_period):  
-        self.display_update_period = refresh_period
-    
-    def setautoRange(self, autoRange):
-        self.autoRange = autoRange
-
-    def setautoLevels(self, autoLevels):
-        self.autoLevels = autoLevels
-            
-    def setminLevel(self, level_min):
-        self.level_min = level_min
+     
         
-    def setmaxLevel(self, level_max):
-        self.level_max = level_max
-    
-    def getminLevel(self):
-        return self.imv.levelMin
-        
-    def getmaxLevel(self):
-        return self.imv.levelMax
-           
-    def setExtractRoi(self, extractRoi):
-        self.settings.extractRoi = extractRoi
-        
-    def getExtractRoi(self):
-        return self.imv.extractRoi
-    
-    def setDimRoi(self, dimRoi):
-        self.dimRoi = dimRoi
-        
-    def getDimRoi(self):
-        return self.imv.dimRoi
-
-    def setMinCellSize(self, minCellSize):
-        self.minCellSize = minCellSize
-        
-    def getMinCellSize(self):
-        return self.imv.minCellSize
-    
-    def find_cell(self, image): 
+    def find_cell(self, image8bit): 
         """ 
             Input:
-        img8bit: monochrome image, previously converted to 8bit (img8bit)
-        cell_size: minimum area of the object to be detected.
+        image: 16 bit monochrome image
             Output:
-        cx,cy : list of the coordinates of the centroids of the detected objects 
-        selected_contours: list of contours of the detected object (no child contours are detected).  
-        """        
-        image8bit = (image/256).astype('uint8') 
+        contour: list of contours of the detected object (no child contours are detected) 
+        cx,cy: list of the coordinates of the centroids of the detected objects 
+        """    
+       
         _ret,thresh_pre = cv2.threshold(image8bit,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         # ret is the threshold that was used, thresh is the thresholded image.     
         kernel  = np.ones((3,3),np.uint8)
@@ -173,36 +139,30 @@ class FakeCameraMeasurement(Measurement):
         contours, _hierarchy = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
         cx = []
         cy = []            
-        #area = []
         contour =[]
         #print(len(contours))
         
         for cnt in contours:
         #   print(len(cnt))           
             M = cv2.moments(cnt)
-            #if M['m00'] >  int(self.camera.min_cell_size.val):   # (M['m00'] gives the contour area, also as cv2.contourArea(cnt)     
-            if M['m00'] >  int(self.minCellSize):
+            if M['m00'] >  int(self.settings.min_cell_size.val):
                 #extracts image center
                 cx.append(int(M['m10']/M['m00']))
                 cy.append(int(M['m01']/M['m00']))
                 contour.append(cnt)
             
-        return image8bit,contour,cx,cy
+        return contour,cx,cy
                     
     
     
     
     def draw_contours(self, image8bit,contour,cx,cy):        
         """ Input: 
-        img8bit: monochrome image, previously converted to 8bit
+        img8bit: monochrome image, previously converted to 8bit and "autoleveled"
+        contour: list of the contours
         cx,cy: list of the coordinates of the centroids  
-        cnt: list of the contours.
-        rect_size: side of the square to be displayed/extracted  
             Output:
-        img: RGB image with annotations
-        roi: list of the extracted ROIs  
-        
-        Note: ROIs are not registered and this might be a problem if one wants to save the stack directly  
+        displayed_image: 8 bit RGB image with annotations to be displayed
         """  
         
         displayed_image = cv2.cvtColor(image8bit,cv2.COLOR_GRAY2RGB)      
@@ -210,18 +170,14 @@ class FakeCameraMeasurement(Measurement):
         for indx, val in enumerate(cx):
             
             #x,y,w,h = cv2.boundingRect(cnt)
-            # x = int(self.cx[indx] - self.camera.dim_roi.val/2) 
-            # y = int(self.cy[indx] - self.camera.dim_roi.val/2)
-            x = int(cx[indx] - self.dimRoi/2) 
-            y = int(cy[indx] - self.dimRoi/2)
-         
-            #w = h = int(self.camera.dim_roi.val)
-            w = h = int(self.dimRoi)
+            x = int(cx[indx] - self.settings.roi_half_side.val) 
+            y = int(cy[indx] - self.settings.roi_half_side.val)
+            w = h = self.settings.roi_half_side.val*2
             
-            displayed_image = cv2.drawContours(displayed_image, [contour[indx]], 0, (0,256,0), 2) 
+            displayed_image = cv2.drawContours(displayed_image, [contour[indx]], 0, (0,256,0), 2)   #(0,256,0)
             
             if indx == 0:
-                color = (256,0,0)    #try with 256 at first place
+                color = (256,0,0)
             else: 
                 color = (0,0,256)
                 
@@ -232,14 +188,22 @@ class FakeCameraMeasurement(Measurement):
     
     
     def roi_creation(self,image,cx,cy):
+        """ Input: 
+        image: 16 bit monochrome image
+        cx,cy: list of the coordinates of the centroids  
+        
+        It creates a list of roi present in the specific image frame analyzed
+        """  
+        roi_half_side = self.settings.roi_half_side.val
         l = image.shape
-        self.roi = []
+        roi = []
         for indx, val in enumerate(cx):
-            x = int(cx[indx] - self.dimRoi/2) 
-            y = int(cy[indx] - self.dimRoi/2)
-            w = h = int(self.dimRoi)
+            x = int(cx[indx] - roi_half_side) 
+            y = int(cy[indx] - roi_half_side)
+            w = h = roi_half_side *2
             if x>0 and y>0 and x+w<l[1]-1 and y+h<l[0]-1:
                     detail = image [y:y+w, x:x+h]    # we want to save the original 16bit version 
-                    if self.settings.extractRoi==True:
-                        self.roi.append(detail)
+                    roi.append(detail)
+        return roi
+                        
     

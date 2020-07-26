@@ -31,7 +31,6 @@ class FakeCameraHardware(HardwareComponent):
         self.path = self.add_logged_quantity('path', 
                                              dtype = str, si = False, ro = 0,
                                              initial = 'C:\\Users\\Andrea Bassi\\OneDrive - Politecnico di Milano\\Data\\PROCHIP\\Throughput_video\\'
-                                             #initial = 'C:\\Users\Mattia Cattaneo\Desktop\Polimi\Magistrale\Tesi\Python\Codes\\'
                                              )
         self.filename = self.add_logged_quantity('filename', 
                                              dtype = str, si = False, ro = 0,
@@ -54,6 +53,9 @@ class FakeCameraHardware(HardwareComponent):
                 
         self.subarrayv.hardware_read_func = self.fakecamera.get_v_size
         self.subarrayh.hardware_read_func = self.fakecamera.get_h_size
+        
+        # self.dim_roi.hardware_set_func = self.hamamatsu.setDim_roi
+        # self.min_cell_size.hardware_set_func = self.hamamatsu.set_min_cell_size
                 
         self.read_from_hardware() #read from hardware at connection
         

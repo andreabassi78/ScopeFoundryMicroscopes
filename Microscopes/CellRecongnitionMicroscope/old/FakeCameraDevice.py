@@ -13,8 +13,6 @@ class FakeCameraDevice(object):
        
     def get_image(self):
         
-        #print(self.image_index)
-        
         if self.image_index == self.img.n_frames:
             self.image_index=0
             
