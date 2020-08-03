@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 import time
 import cv2
+import pdb
 
 class FakeCameraMeasurement(Measurement):
     
@@ -83,6 +84,7 @@ class FakeCameraMeasurement(Measurement):
         
         if hasattr(self, "image"):
               
+            
             t0 = time.time()
             if self.settings.auto_levels.val:
                 # if autolevel is on, normalize the image to its max and min     
@@ -124,15 +126,16 @@ class FakeCameraMeasurement(Measurement):
              
     def run(self):
         
-        
-        
 
         try:
             
+        
             self.camera.read_from_hardware()
                
             while not self.interrupt_measurement_called:
-                    
+                
+                #pdb.set_trace()
+                
                 self.image = self.camera.fakecamera.get_image()
                 t0 = time.time()
                 image8bit = (self.image/256).astype('uint8')

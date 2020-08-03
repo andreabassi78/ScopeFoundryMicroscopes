@@ -27,8 +27,7 @@ if __name__ == '__main__':
     ################### for debugging only ##############
     app.settings_load_ini(".\\settings\\settings0.ini")
     for hc_name, hc in app.hardware.items():
-        
-        hc.enable_connection()
+        hc.settings['connected'] = True
     #####################################################    
         
     sys.exit(app.exec_())

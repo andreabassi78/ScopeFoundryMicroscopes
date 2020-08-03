@@ -11,19 +11,16 @@ import pyqtgraph as pg
 import numpy as np
 import os
 from viewers.find_h5_dataset import find_dataset
+import pdb
 
 class ImageStackH5(DataBrowserView):
 
     name = 'stack_h5_view'
     
     def setup(self):
-        
-        self.settings.New('Frame rate', dtype=float, initial=10)
-        self.settings.get_lq('Frame rate').add_listener(self.update_display)
-        
-        self.settings.New('Play', dtype=bool, initial= False)
-        self.settings.get_lq('Play').add_listener(self.update_display)
-        
+    
+        self.settings.New('Dataset index', dtype=int, initial= 0, vmin = 0)
+        self.settings.get_lq('Dataset index').add_listener(self.update_display)
         
         self.ui = QtWidgets.QWidget()
         self.ui.setLayout(QtWidgets.QVBoxLayout())
@@ -37,23 +34,14 @@ class ImageStackH5(DataBrowserView):
         
                 
     def on_change_data_filename(self, fname):
-                
+        #pdb.set_trace()       
         try:
-            self.stack = self.load_h5_dataset(fname)
-            
-            if hasattr(self,'stack'): #& self.stack.ndim>=2:
-                #print(self.stack.ndim)
-                #num_images = self.stack.shape[0]
-                #self.settings.index.change_min_max(0, num_images-1)        
-                self.imview.setImage(self.stack)            
-                ## This would display the data and assign each frame a time value from 1.0 to 3.0
-                #self.imview.setImage((self.stack),xvals=np.linspace(1., 3., num_images))            
-                self.update_display()
-                
-                  
+            self.search_h5_datasets(fname)
+            self.file = f = h5py.File(fname)
+            self.update_display()
                             
         except Exception as err:
-            self.imview.setImage(np.zeros((10,10,10)))
+            #self.imview.setImage(np.zeros((10,10,10)))
             self.databrowser.ui.statusbar.showMessage("failed to load %s:\n%s" %(fname, err))
             raise(err)
               
@@ -61,22 +49,31 @@ class ImageStackH5(DataBrowserView):
     def is_file_supported(self, fname):
         _, ext = os.path.splitext(fname)
         return ext.lower() in ['.h5']
+    
       
     def update_display(self):
+        #pdb.set_trace()   
+        if hasattr(self,'imview'):
+            self.set_stack()                                    
+            self.imview.setImage(self.stack) 
+                    
+                                    
+    def set_stack(self):
+        stack_index = self.settings['Dataset index']
         
-            if hasattr(self,'imview'):
-                fr = self.settings['Frame rate']
-                #self.imview.setCurrentIndex(ii)
-                
-                #Plays the stack at the chosen frame rate
-                if self.settings['Play']:
-                    self.imview.play(fr)
+        if stack_index >= self.found:    
+            stack_index = 0
+            self.settings['Dataset index'] = stack_index    
+        
+        f= self.file
+        self.stack = (np.array(f[self.dataname[stack_index]]))
+        self.current_stack_index = stack_index
+                    
                
-    def load_h5_dataset(self, fname):
+    def search_h5_datasets(self, fname):
         f = h5py.File(fname)
-        [dataname,shape,found]=find_dataset(f)
+        [self.dataname,self.shape,self.found]=find_dataset(f)
         
-        return (np.array(f[dataname[0]]))
       
             
 if __name__ == '__main__':

@@ -51,16 +51,16 @@ if __name__ == "__main__" :
         import numpy as np
         
         # this h5 file must contain a dataset composed by an array or an image
-        file_name='C:/PythonCode/Eclipse/Browser/DATA/generated.h5'
+        file_name='C:\\Users\\Andrea Bassi\\OneDrive - Politecnico di Milano\\Data\\PROCHIP\\stackROI_h5\\test.h5'
         
         file = h5py.File(file_name, 'r') # open read-only
         [dataname,datashape,datafound] = find_dataset(file)    
         
         
         #show dataset location and shape        
-        print(dataname)
-        print(datashape)
-        print(datafound)    
+        print('dataname:', dataname)
+        print('datashape:', datashape)
+        print('datafound', datafound)    
               
         #read data and plot
         #data = file[dataname[0]]
