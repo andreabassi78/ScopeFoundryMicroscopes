@@ -1,0 +1,11 @@
+2019-01-15T12:06:44|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 311, in update_choice_index_value
+    self.update_value(self.choices[new_choice_index][1], **kwargs)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 241, in update_value
+    self.hardware_set_func(self.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 71, in set_mode
+    self.Task()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 44, in Task
+    array=np.linspace(start=0, stop=2*np.pi*self.num_periods, num=self.num_samples)
+AttributeError: 'NI_DAQ_device' object has no attribute 'num_samples'
+

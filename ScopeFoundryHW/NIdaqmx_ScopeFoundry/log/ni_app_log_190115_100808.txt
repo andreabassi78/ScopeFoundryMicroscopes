@@ -1,0 +1,24 @@
+2019-01-15T10:09:47|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_hardware.py", line 34, in connect
+    frequency=self.frequency.val, offset=self.offset.val, debug=self.debug_mode.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 28, in __init__
+    self.startTask()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 37, in startTask
+    self.task.timing.cfg_samp_clk_timing(rate= self.rate, sample_mode=self.dict.get(self.sample_mode), samps_per_chan=self.num_samples)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\timing.py", line 3007, in cfg_samp_clk_timing
+    check_for_error(error_code)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\errors.py", line 127, in check_for_error
+    raise DaqError(error_buffer.value.decode("utf-8"), error_code)
+nidaqmx.errors.DaqError: Requested value is not a supported value for this property. The property value may be invalid because it conflicts with another property.
+Property: DAQmx_SampTimingType
+Requested Value: DAQmx_Val_SampClk
+Possible Values: DAQmx_Val_OnDemand
+
+Task Name: _unnamedTask<1>
+
+Status Code: -200077
+

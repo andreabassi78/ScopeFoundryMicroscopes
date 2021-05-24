@@ -22,11 +22,11 @@ try:
 except ImportError:
     logging.warning("Error loading ImageStackH5 viewer")
 
-# try:    
-#     from viewers.thorlabsPD_H5_view import PlotH5
-#     app.load_view(PlotH5(app))
-# except ImportError:
-#     logging.warning("Error loading PlotH5 viewer")    
+try:    
+    from viewers.thorlabsPD_H5_view import PlotH5
+    app.load_view(PlotH5(app))
+except ImportError:
+    logging.warning("Error loading PlotH5 viewer")    
     
 
 from viewers.h5_tree import H5TreeView, H5TreeSearchView

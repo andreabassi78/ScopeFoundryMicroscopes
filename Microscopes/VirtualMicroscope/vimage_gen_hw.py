@@ -14,8 +14,6 @@ class VirtualImageGenHW(HardwareComponent):
                 
         self.settings.New(name='amplitude', initial=1.0, dtype=float, ro=False)
         self.settings.New(name='size', initial=200, dtype=int, ro=False)
-        
-        
         self.image_data=  np.empty([self.settings['size'],self.settings['size']], dtype=np.uint16)
             
     def connect(self):

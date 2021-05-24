@@ -1,0 +1,20 @@
+2019-01-15T11:20:47|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 241, in update_value
+    self.hardware_set_func(self.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 74, in set_ampl
+    self.write(amplitude)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 56, in write
+    self.task.write(data, auto_start = False)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\task.py", line 1235, in write
+    timeout)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\write_functions.py", line 32, in _write_analog_f_64
+    check_for_error(error_code)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\errors.py", line 127, in check_for_error
+    raise DaqError(error_buffer.value.decode("utf-8"), error_code)
+nidaqmx.errors.DaqError: Write cannot be performed when the auto start input to DAQmx Write is false, task is not running, and timing for the task is not configured or Timing Type is set to On Demand.
+
+Set auto start to true, start the task, or configure timing and specify Timing Type other than On Demand.
+Task Name: _unnamedTask<0>
+
+Status Code: -200846
+

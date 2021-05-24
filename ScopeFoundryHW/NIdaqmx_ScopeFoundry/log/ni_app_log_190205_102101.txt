@@ -1,0 +1,15 @@
+2019-02-05T10:21:03|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 39, in <module>
+    app = NI_App(sys.argv)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 21, in setup
+    self.add_hardware(NI_AO_hw(self))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 80, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_ao_hardware.py", line 15, in setup
+    board, terminals=self.update_channels()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_ao_hardware.py", line 86, in update_channels
+    for line in device.ao_channels:
+AttributeError: 'Device' object has no attribute 'ao_channels'
+

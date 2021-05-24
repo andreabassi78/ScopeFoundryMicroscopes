@@ -38,6 +38,8 @@ class FakeCameraMeasurement(Measurement):
         self.cx = []
         self.cy = []
         
+        self.roi_num = 0
+        
         
     def setup_figure(self):
         """
@@ -171,7 +173,6 @@ class FakeCameraMeasurement(Measurement):
         cx = []
         cy = []            
         contour =[]
-        #print(len(contours))
         
         for cnt in contours:
         #   print(len(cnt))           
@@ -181,7 +182,8 @@ class FakeCameraMeasurement(Measurement):
                 cx.append(int(M['m10']/M['m00']))
                 cy.append(int(M['m01']/M['m00']))
                 contour.append(cnt)
-            
+        
+        self.roi_num = len(contour)
         return contour,cx,cy
                     
     
@@ -198,7 +200,7 @@ class FakeCameraMeasurement(Measurement):
         
         displayed_image = cv2.cvtColor(image8bit,cv2.COLOR_GRAY2RGB)      
         
-        for indx, val in enumerate(cx):
+        for indx in range(self.roi_num):
             
             #x,y,w,h = cv2.boundingRect(cnt)
             x = int(cx[indx] - self.settings.roi_half_side.val) 
@@ -228,7 +230,7 @@ class FakeCameraMeasurement(Measurement):
         roi_half_side = self.settings.roi_half_side.val
         l = image.shape
         roi = []
-        for indx, val in enumerate(cx):
+        for indx in range(self.roi_num):
             x = int(cx[indx] - roi_half_side) 
             y = int(cy[indx] - roi_half_side)
             w = h = roi_half_side *2
@@ -237,4 +239,10 @@ class FakeCameraMeasurement(Measurement):
                     roi.append(detail)
         return roi
                         
+    @property
+    def roi_num(self):
+        return self._roi_num
     
+    @roi_num.setter
+    def roi_num(self, num):
+        self._roi_num = num

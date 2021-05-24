@@ -1,0 +1,9 @@
+2019-01-21T13:06:40|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_hardware.py", line 41, in connect
+    self.mode.change_readonly(True)
+AttributeError: 'NI_CO_hw' object has no attribute 'mode'
+

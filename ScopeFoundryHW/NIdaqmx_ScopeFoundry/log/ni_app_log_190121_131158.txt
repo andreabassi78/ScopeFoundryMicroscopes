@@ -1,0 +1,15 @@
+2019-01-21T13:12:35|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_hardware.py", line 42, in connect
+    trigger_source=self.trigger_source.val, trigger_edge=self.trigger_edge.val, debug=self.debug_mode.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_device.py", line 23, in __init__
+    self.Task()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_device.py", line 34, in Task
+    self.task.triggers.start_trigger.cfg_dig_edge_start_trig(trigger_source = self.trigger_source, trigger_edge = self.dict.get(self.trigger_edge))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\triggering\start_trigger.py", line 1945, in cfg_dig_edge_start_trig
+    self._handle, trigger_source, trigger_edge.value)
+AttributeError: 'NoneType' object has no attribute 'value'
+

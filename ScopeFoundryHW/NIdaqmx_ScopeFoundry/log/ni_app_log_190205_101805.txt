@@ -1,0 +1,24 @@
+2019-02-05T10:18:12|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_do_hardware.py", line 29, in connect
+    self.DO_device = NI_DO_device(channel=self.channel.val, debug=self.debug_mode.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_do_device.py", line 15, in __init__
+    self.Task()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_do_device.py", line 22, in Task
+    self.task.do_channels.add_do_chan(lines=self.channel)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\do_channel_collection.py", line 103, in add_do_chan
+    check_for_error(error_code)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\errors.py", line 127, in check_for_error
+    raise DaqError(error_buffer.value.decode("utf-8"), error_code)
+nidaqmx.errors.DaqError: Physical channel specified does not exist on this device.
+
+Refer to the documentation for channels available on this device.
+Physical Channel Name: 0
+
+Task Name: _unnamedTask<0>
+
+Status Code: -200170
+
