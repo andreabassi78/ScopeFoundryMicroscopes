@@ -1,0 +1,22 @@
+2019-01-15T12:07:15|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 311, in update_choice_index_value
+    self.update_value(self.choices[new_choice_index][1], **kwargs)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 241, in update_value
+    self.hardware_set_func(self.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 71, in set_mode
+    self.Task()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 46, in Task
+    writer.write_many_sample(samples)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\stream_writers.py", line 240, in write_many_sample
+    self._handle, data, data.shape[0], auto_start, timeout)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\write_functions.py", line 32, in _write_analog_f_64
+    check_for_error(error_code)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\errors.py", line 127, in check_for_error
+    raise DaqError(error_buffer.value.decode("utf-8"), error_code)
+nidaqmx.errors.DaqError: Write cannot be performed when the task is not started, the sample timing type is something other than On Demand, and the output buffer size is zero.
+
+Call DAQmx Start before DAQmx Write, set auto start to true on DAQmx Write, modify the sample timing type, or change the output buffer size.
+Task Name: _unnamedTask<1>
+
+Status Code: -200802
+

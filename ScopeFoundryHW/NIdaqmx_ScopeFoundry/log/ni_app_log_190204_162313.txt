@@ -1,0 +1,15 @@
+2019-02-04T16:23:14|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 39, in <module>
+    app = NI_App(sys.argv)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 22, in setup
+    self.add_hardware(NI_DO_hw(self))
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 80, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_do_hardware.py", line 16, in setup
+    boards=self.update_ports()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_do_hardware.py", line 56, in update_ports
+    terminals[i]=device.terminals
+NameError: name 'terminals' is not defined
+

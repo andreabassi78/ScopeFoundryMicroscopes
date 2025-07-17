@@ -1,0 +1,18 @@
+2019-02-05T15:44:56|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_hardware.py", line 37, in connect
+    trigger_source=self.trigger_source.val, trigger_edge=self.trigger_edge.val, debug=self.debug_mode.val)
+TypeError: __init__() missing 1 required positional argument: 'initial_delay'
+
+2019-02-05T15:45:23|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 208, in enable_connection
+    raise err
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\hardware.py", line 204, in enable_connection
+    self.connect()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_hardware.py", line 37, in connect
+    trigger_source=self.trigger_source.val, trigger_edge=self.trigger_edge.val, debug=self.debug_mode.val)
+TypeError: __init__() missing 1 required positional argument: 'initial_delay'
+

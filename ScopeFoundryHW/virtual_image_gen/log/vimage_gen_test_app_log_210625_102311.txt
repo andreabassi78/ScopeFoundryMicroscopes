@@ -1,0 +1,41 @@
+2021-06-25T10:23:26|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:23:26|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:23:26|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:23:34|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:23:36|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:23:36|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:30:01|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:30:01|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:30:01|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:31:12|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:31:12|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:31:19|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:31:19|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:31:19|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:31:24|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop True
+2021-06-25T10:31:24|INFO|VirtualImageGenMeasure|measurement virtual_image_measure start
+2021-06-25T10:31:25|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:31:25|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:31:25|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:31:55|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:31:55|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:36:00|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:36:00|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:36:00|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:36:57|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:36:57|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:36:59|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:36:59|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:36:59|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:37:16|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:37:16|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:37:41|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:37:41|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:37:41|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:39:41|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:39:41|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen
+2021-06-25T10:39:43|INFO|VirtualImageGenMeasure|virtual_image_measure start_stop False
+2021-06-25T10:39:43|INFO|VirtualImageGenMeasure|measurement virtual_image_measure interrupt
+2021-06-25T10:39:43|INFO|VirtualImageGenTestApp|setting up figures for virtual_image_measure measurement virtual_image_measure
+2021-06-25T10:40:20|INFO|VirtualImageGenTestApp|on_close
+2021-06-25T10:40:20|INFO|VirtualImageGenTestApp|disconnecting virtual_image_gen

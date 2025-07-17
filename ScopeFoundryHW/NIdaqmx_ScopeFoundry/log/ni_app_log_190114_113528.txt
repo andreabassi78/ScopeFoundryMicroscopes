@@ -1,0 +1,24 @@
+2019-01-14T11:36:31|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 311, in update_choice_index_value
+    self.update_value(self.choices[new_choice_index][1], **kwargs)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\logged_quantity.py", line 241, in update_value
+    self.hardware_set_func(self.val)
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 52, in set_mode
+    self.startTask()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_device.py", line 31, in startTask
+    self.task.ao_channels.add_ao_func_gen_chan(physical_channel=self.channel, type=dict.get(self.waveform), freq=self.frequency, amplitude=self.amplitude, offset=self.offset)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\_task_modules\ao_channel_collection.py", line 142, in add_ao_func_gen_chan
+    check_for_error(error_code)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\nidaqmx\errors.py", line 127, in check_for_error
+    raise DaqError(error_buffer.value.decode("utf-8"), error_code)
+nidaqmx.errors.DaqError: Selected physical channel does not support the output type required by the virtual channel you are creating.
+
+Create a channel of an output type that is supported by the physical channel, or select a physical channel that supports the output type.
+Property: DAQmx_AO_OutputType
+Requested Value: DAQmx_Val_FuncGen
+Possible Values: DAQmx_Val_Voltage
+
+Task Name: _unnamedTask<2>
+
+Status Code: -200432
+

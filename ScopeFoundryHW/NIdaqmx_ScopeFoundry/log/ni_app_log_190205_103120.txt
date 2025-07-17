@@ -1,0 +1,12 @@
+2019-02-05T10:31:21|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 39, in <module>
+    app = NI_App(sys.argv)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 20, in setup
+    from ni_co_hardware import NI_CO_hw
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_co_hardware.py", line 77
+    if 'PFI' in j
+                ^
+SyntaxError: invalid syntax
+

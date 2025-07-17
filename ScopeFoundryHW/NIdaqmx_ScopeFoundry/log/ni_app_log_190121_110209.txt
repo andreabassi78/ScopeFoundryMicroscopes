@@ -1,0 +1,9 @@
+2019-01-21T11:02:09|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 37, in <module>
+    app = NI_App(sys.argv)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 19, in setup
+    from ni_do_hardawre import NI_DO_hw
+ModuleNotFoundError: No module named 'ni_do_hardawre'
+

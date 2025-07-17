@@ -1,0 +1,9 @@
+2019-01-21T10:04:37|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 35, in <module>
+    app = NI_App(sys.argv)
+  File "C:\ProgramData\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\LabPrograms\Python\nidaqmx_test\ni_app.py", line 19, in setup
+    self.add_hardware(NI_DAQ_AO_hw(self))
+NameError: name 'NI_DAQ_AO_hw' is not defined
+

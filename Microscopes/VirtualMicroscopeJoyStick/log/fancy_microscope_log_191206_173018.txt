@@ -1,0 +1,12 @@
+2019-12-06T17:30:19|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\Microscopes\VirtualMicroscopeJoyStick\JoystickApp.py", line 44, in <module>
+    app = FancyMicroscopeApp(sys.argv)
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\base_app.py", line 338, in __init__
+    self.setup()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\Microscopes\VirtualMicroscopeJoyStick\JoystickApp.py", line 20, in setup
+    from ScopeFoundryHW.joystick_hardware.joystick_hd import JoyStick_HW
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundryHW\joystick_hardware\joystick_hd.py", line 34
+    )
+    ^
+SyntaxError: invalid syntax
+

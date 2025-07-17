@@ -1,0 +1,11 @@
+2019-01-14T15:52:11|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\aless\eclipse-workspace\nidaqmx_test\ni_app.py", line 35, in <module>
+    app = NI_App(sys.argv)
+  File "C:\Users\aless\Anaconda3\lib\site-packages\ScopeFoundry\base_app.py", line 332, in __init__
+    self.setup()
+  File "C:\Users\aless\eclipse-workspace\nidaqmx_test\ni_app.py", line 18, in setup
+    from ni_hardware import NI_DAQ_AO_hw
+  File "C:\Users\aless\eclipse-workspace\nidaqmx_test\ni_hardware.py", line 3, in <module>
+    from ni_device import NI_DAQ_AO_device
+ImportError: cannot import name 'NI_DAQ_AO_device' from 'ni_device' (C:\Users\aless\eclipse-workspace\nidaqmx_test\ni_device.py)
+

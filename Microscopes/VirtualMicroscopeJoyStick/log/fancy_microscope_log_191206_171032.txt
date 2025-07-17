@@ -1,0 +1,18 @@
+2019-12-06T17:11:57|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 25, in run
+    self.measurement._thread_run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 183, in _thread_run
+    self.run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\Microscopes\VirtualMicroscopeJoyStick\SineGenJoyStick_measure.py", line 108, in run
+    self.func_gen.amplitude = self.joystick.get_axis_values(5)
+AttributeError: 'JoyStick_HW' object has no attribute 'get_axis_values'
+
+2019-12-06T17:12:00|CRITICAL|root|Unhandled exception:Traceback (most recent call last):
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 25, in run
+    self.measurement._thread_run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\ScopeFoundry\measurement.py", line 183, in _thread_run
+    self.run()
+  File "C:\Users\Andrea Bassi\Documents\PythonProjects\BassiScopeFoundryMicroscopes\Microscopes\VirtualMicroscopeJoyStick\SineGenJoyStick_measure.py", line 108, in run
+    self.func_gen.amplitude = self.joystick.get_axis_values(5)
+AttributeError: 'JoyStick_HW' object has no attribute 'get_axis_values'
+
