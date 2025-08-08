@@ -26,7 +26,10 @@ class IdsMeasure(Measurement):
         self.ui = load_qt_ui_file(self.ui_filename) 
         
         self.settings.New('save_h5', dtype=bool, initial=False)         
-        self.settings.New('refresh_period', dtype = float, unit ='s', spinbox_decimals = 3, initial = 0.05, vmin = 0)        
+        self.settings.New('refresh_period', dtype = float, unit ='s', spinbox_decimals = 3, initial = 0.08, vmin = 0) 
+
+        self.frame_num = self.settings.New(name='frame_num',initial= 10, spinbox_step = 1,
+                                           dtype=int, ro=False)       
         
         self.settings.New('xsampling', dtype=float, unit='um', initial=0.0586, spinbox_decimals = 3) 
         self.settings.New('ysampling', dtype=float, unit='um', initial=0.0586, spinbox_decimals = 3)
@@ -77,7 +80,7 @@ class IdsMeasure(Measurement):
         """
         self.display_update_period = self.settings['refresh_period'] 
        
-        length = self.image_gen.frame_num.val
+        length = self.frame_num.val
         
         self.settings['progress'] = (self.frame_index +1) * 100/length
         
@@ -101,34 +104,39 @@ class IdsMeasure(Measurement):
     
     def measure(self):
         """
-        Acquire Nframes frames and eventually save them in h5 
+        Acquire frame_num frames and save them in h5 
         """
-        self.image_gen.camera.stop_acquisition()
-        #self.image_gen.settings['acquisition_mode'] = 'MultiFrame'
         first_frame_acquired = False
-        frame_num  = self.image_gen.frame_num.val
-        #self.image_gen.camera.set_framenum(frame_num)
+        frame_num  = self.frame_num.val
+        self.frame_index = 0
+        #nm = self.image_gen.camera.remote_nodemap
+        self.image_gen.camera.remote_nodemap.FindNode("AcquisitionMode").SetCurrentEntry("Continuous")
+        #nm.FindNode("AcquisitionMode").SetCurrentEntry("MultiFrame")
+        #nm.FindNode("AcquisitionFrameCount").SetValue(int(frame_num)) 
         self.image_gen.camera.start_acquisition()
-        
-        for frame_idx in range(frame_num):
+        t = time.perf_counter()
+
+        for frame_idx, img in enumerate(self.image_gen.camera.get_multiple_frames(frame_num)):
+            self.img = img
             
-            self.frame_index = frame_idx    
-            self.img = self.image_gen.camera.get_last_frame()
-                            
-            if self.settings['save_h5']:
-                if not first_frame_acquired:
-                    self.create_h5_file()
-                    first_frame_acquired = True
-                    
-                self.image_h5[frame_idx,:,:] = self.img
-                self.h5file.flush()
-            
+            self.frame_index = frame_idx
+            dt = time.perf_counter() - t
+            # print(f"Frame {frame_idx}: shape={img.shape}, Δt={dt:.4f}s")
+            t = time.perf_counter()
+
             if self.interrupt_measurement_called:
                 break
             
-        self.image_gen.camera.stop_acquisition()
+            if not first_frame_acquired:
+                self.create_h5_file()
+                first_frame_acquired = True
+                    
+            self.image_h5[frame_idx,:,:] = img
+            self.h5file.flush()
         
-    
+        self.image_gen.camera.stop_acquisition()
+        self.h5file.close()
+        self.settings['save_h5'] = False
     
     def run(self):
         """
@@ -140,7 +148,8 @@ class IdsMeasure(Measurement):
         
         try:
             self.frame_index = -1
-            self.image_gen.settings['acquisition_mode'] = 'Continuous'
+            self.image_gen.camera.remote_nodemap.FindNode("AcquisitionMode").SetCurrentEntry("Continuous")
+            self.image_gen.settings['exposure_mode'] = 'Timed'
             self.image_gen.camera.start_acquisition() 
             
             while not self.interrupt_measurement_called:
@@ -148,19 +157,16 @@ class IdsMeasure(Measurement):
                 self.img = self.image_gen.camera.get_last_frame()
                 
                 if self.interrupt_measurement_called:
+                    self.image_gen.camera.stop_acquisition() 
                     break
                 
                 if self.settings['save_h5']:
                     # measure is triggered by save_h5 button
+                    self.image_gen.camera.stop_acquisition() 
                     self.measure()
                     break
-                
-        finally:            
-            
-            self.image_gen.camera.stop_acquisition()
-            if self.settings['save_h5'] and hasattr(self, 'h5file'):
-                # make sure to close the data file
-                self.h5file.close() 
+        finally:
+            pass
          
     def create_saving_directory(self):
         
@@ -186,7 +192,7 @@ class IdsMeasure(Measurement):
         img_size = self.img.shape
         dtype=self.img.dtype
         
-        length = self.image_gen.frame_num.val
+        length = self.frame_num.val
         self.image_h5 = self.h5_group.create_dataset(name  = 't0/c0/image', 
                                                   shape = [length, img_size[0], img_size[1]],
                                                   dtype = dtype)

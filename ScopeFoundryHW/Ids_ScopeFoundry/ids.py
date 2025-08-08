@@ -54,15 +54,31 @@ class Camera:
         self.set_node_value("OffsetX",x)
         self.set_node_value("OffsetY", y)
 
-    def set_exposure_ms(self,value,framerate=None):
+
+    def get_exposure_ms(self):
+        val = self.remote_nodemap.FindNode("ExposureTime").Value()/1000
+        print(val)
+        return val
+            
+    def get_frame_rate(self):
+        val = self.remote_nodemap.FindNode("AcquisitionFrameRate").Value()
+        print(val)
+        return val
+
+    def set_exposure_ms(self,value):
         value=value*1000
         self.set_node_value("ExposureTime",value)
-
-        if framerate is None:
+        max_exposure = self.remote_nodemap.FindNode("ExposureTime").Maximum()
+        print(value, max_exposure)
+        if value > max_exposure: 
             self.remote_nodemap.FindNode("AcquisitionFrameRate").SetValue(
                 self.remote_nodemap.FindNode("AcquisitionFrameRate").Maximum())
-        else:
-            self.set_node_value("AcquisitionFrameRate",framerate)
+        
+    def set_frame_rate(self,framerate):
+        max_rate = self.remote_nodemap.FindNode("AcquisitionFrameRate").Maximum()
+        self.set_node_value("AcquisitionFrameRate", min(framerate, max_rate))
+        print(self.remote_nodemap.FindNode("AcquisitionFrameRate").Value())
+
 
     def set_gain(self,value):
         self.set_node_value("Gain",value)
@@ -77,21 +93,28 @@ class Camera:
         else:
             warnings.warn("Invalid bit depth")
 
-    def start_acquisition(self, buffersize=0):
-        payload_size = self.remote_nodemap.FindNode("PayloadSize").Value()
-        if buffersize<self.data_stream.NumBuffersAnnouncedMinRequired():
-            buffer_count_max = self.data_stream.NumBuffersAnnouncedMinRequired()
-        else:
-            buffer_count_max = buffersize
 
-        # Allocate buffers and add them to the pool
-        for buffer_count in range(buffer_count_max):
-            buffer = self.data_stream.AllocAndAnnounceBuffer(payload_size)
-            self.data_stream.QueueBuffer(buffer)
+    def set_frame_num(self, nframes):
+        nm = self.remote_nodemap
+        nm.FindNode("AcquisitionMode").SetCurrentEntry("MultiFrame")
+        nm.FindNode("AcquisitionFrameCount").SetValue(int(nframes))
+
+
+    def start_acquisition(self, buffersize=0):
+        nm = self.remote_nodemap
+        payload_size = nm.FindNode("PayloadSize").Value()
+        min_req = self.data_stream.NumBuffersAnnouncedMinRequired()
+
+        base = max(min_req, int(buffersize))
+        buffer_count_max = base + int(base*0.1) # buffer increased by 10%
+
+        for _ in range(buffer_count_max):
+            buf = self.data_stream.AllocAndAnnounceBuffer(payload_size)
+            self.data_stream.QueueBuffer(buf)
 
         self.data_stream.StartAcquisition()
-        self.remote_nodemap.FindNode("AcquisitionStart").Execute()
-        self.remote_nodemap.FindNode("AcquisitionStart").WaitUntilDone()
+        nm.FindNode("AcquisitionStart").Execute()
+        nm.FindNode("AcquisitionStart").WaitUntilDone()
 
     def stop_acquisition(self):
         self.remote_nodemap.FindNode("AcquisitionStop").Execute()
@@ -104,24 +127,56 @@ class Camera:
 
     def get_frame(self, timeout_ms=1000):
         buffer = self.data_stream.WaitForFinishedBuffer(timeout_ms)
-        img = numpy.copy(ids_peak_ipl_extension.BufferToImage(buffer).get_numpy())
-        self.data_stream.QueueBuffer(buffer)
-
+        try:
+            return numpy.copy(ids_peak_ipl_extension.BufferToImage(buffer).get_numpy())
+        finally:
+            self.data_stream.QueueBuffer(buffer)
         return img
 
-    def get_last_frame(self, timeout_ms=1000):
-        buffer = self.data_stream.WaitForFinishedBuffer(timeout_ms)
-        indexes = []
-        buffers= self.data_stream.AnnouncedBuffers()
-        for buf in self.data_stream.AnnouncedBuffers():
-            indexes.append(buf.FrameID())
-        img = numpy.copy(ids_peak_ipl_extension.BufferToImage(buffers[int(numpy.argmax(numpy.asarray(indexes)))]).get_numpy())
-        self.data_stream.QueueBuffer(buffer)
-
-        return img
+    def get_last_frame(self, timeout_ms=1):
+        """Get the most recent finished buffer by draining the queue quickly."""
+        last_img = None
+        while True:
+            try:
+                buffer = self.data_stream.WaitForFinishedBuffer(timeout_ms)
+                try:
+                    last_img = numpy.copy(ids_peak_ipl_extension.BufferToImage(buffer).get_numpy())
+                finally:
+                    self.data_stream.QueueBuffer(buffer)
+                # loop again to see if a newer one is already ready
+            except Exception:
+                break
+        if last_img is None:
+            # fall back to a normal wait
+            buffer = self.data_stream.WaitForFinishedBuffer(max(timeout_ms, 1000))
+            try:
+                return numpy.copy(ids_peak_ipl_extension.BufferToImage(buffer).get_numpy())
+            finally:
+                self.data_stream.QueueBuffer(buffer)
+        return last_img
+    
+    def get_multiple_frames(self, nframes, timeout_ms=1000):
+        for _ in range(nframes):
+            buffer = self.data_stream.WaitForFinishedBuffer(timeout_ms)
+            try:
+                img = numpy.copy(ids_peak_ipl_extension.BufferToImage(buffer).get_numpy())
+                yield img
+            finally:
+                self.data_stream.QueueBuffer(buffer)
 
     def close(self):
-        ids_peak.Library.Close()
+        try:
+            self.stop_acquisition()
+        except Exception:
+            pass
+        try:
+            self.device.Close()
+        except Exception:
+            pass
+        try:
+            ids_peak.Library.Close()
+        except Exception:
+            pass
 
 if __name__=="__main__":
     import time
@@ -131,17 +186,30 @@ if __name__=="__main__":
     # cam.set_active_region(300,900,300,300)
 
     cam.set_exposure_ms(1.0)
+    cam.set_frame_rate(400)
     cam.set_gain(10.0)
 
+    N=20
+    cam.set_frame_num(N)
 
-    cam.start_acquisition()
+    cam.start_acquisition(N)
+
     t = time.perf_counter()
-    for i in range(10):
-        img=cam.get_last_frame()
-        print(img.shape,time.perf_counter()-t)
+    for frame_idx, img in enumerate(cam.get_multiple_frames(N)):
+        dt = time.perf_counter() - t
+        print(f"Frame {frame_idx}: shape={img.shape}, Δt={dt:.4f}s")
         t = time.perf_counter()
-    cam.stop_acquisition()
 
     print(cam.get_size())
 
+
+
+    cam.stop_acquisition()
+    #cam.stop_acquisition()
+
+    # for node in cam.remote_nodemap.Nodes():
+    #    print(node.Name())
+
+    
     cam.close()
+
