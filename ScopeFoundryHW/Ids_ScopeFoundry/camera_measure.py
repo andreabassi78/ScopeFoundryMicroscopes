@@ -113,16 +113,16 @@ class IdsMeasure(Measurement):
         self.image_gen.camera.remote_nodemap.FindNode("AcquisitionMode").SetCurrentEntry("Continuous")
         #nm.FindNode("AcquisitionMode").SetCurrentEntry("MultiFrame")
         #nm.FindNode("AcquisitionFrameCount").SetValue(int(frame_num)) 
-        self.image_gen.camera.start_acquisition()
+        self.image_gen.camera.start_acquisition(int(frame_num))
         t = time.perf_counter()
 
         for frame_idx, img in enumerate(self.image_gen.camera.get_multiple_frames(frame_num)):
             self.img = img
             
             self.frame_index = frame_idx
-            dt = time.perf_counter() - t
+            # dt = time.perf_counter() - t
             # print(f"Frame {frame_idx}: shape={img.shape}, Δt={dt:.4f}s")
-            t = time.perf_counter()
+            # t = time.perf_counter()
 
             if self.interrupt_measurement_called:
                 break
